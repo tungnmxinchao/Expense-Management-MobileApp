@@ -15,11 +15,6 @@
         <activity
             android:name=".Pages.NotificationActivity"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Pages.ForgotPasswordActivity"
@@ -32,11 +27,6 @@
         <activity
             android:name=".Pages.ReportActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Pages.EditExpenseActivity"
@@ -55,7 +45,13 @@
             android:exported="true" />
         <activity
             android:name=".Authentication.LoginActivity"
-            android:exported="true" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".firebase.TestFirebaseActivity"
             android:exported="true" />
