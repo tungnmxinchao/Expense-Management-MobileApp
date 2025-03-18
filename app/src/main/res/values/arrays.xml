@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="expense_categories">
+        <item>Ăn uống</item>
+        <item>Di chuyển</item>
+        <item>Giải trí</item>
+        <item>Mua sắm</item>
+        <item>Khác</item>
+    </string-array>
+
+    <string-array name="time_filters">
+        <item>Tuần này</item>
+        <item>Tháng này</item>
+        <item>Năm này</item>
+    </string-array>
+
+</resources>
