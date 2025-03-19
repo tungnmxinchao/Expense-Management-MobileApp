@@ -1,5 +1,7 @@
 package tno.hi.expense.Adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +15,16 @@ import java.util.List;
 import java.util.Locale;
 
 import tno.hi.expense.Models.Expense;
+import tno.hi.expense.Pages.ExpenseDetailsActivity;
 import tno.hi.expense.R;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
     private List<Expense> expenseList;
+    private Context context;
 
-    public ExpenseAdapter(List<Expense> expenseList) {
+    public ExpenseAdapter(List<Expense> expenseList, Context context) {
         this.expenseList = expenseList;
+        this.context = context;
     }
 
     @NonNull
@@ -39,6 +44,16 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         String formattedAmount = format.format(expense.getAmount());
         holder.amount.setText(formattedAmount);
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ExpenseDetailsActivity.class);
+            intent.putExtra("expenseId", expense.getId());
+            intent.putExtra("date", expense.getDate());
+            intent.putExtra("category", expense.getCategory());
+            intent.putExtra("amount", String.valueOf(expense.getAmount()));
+            intent.putExtra("description", expense.getDescription());
+            context.startActivity(intent);
+        });
     }
 
     @Override

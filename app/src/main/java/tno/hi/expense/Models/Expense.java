@@ -1,6 +1,9 @@
 package tno.hi.expense.Models;
 
+import java.util.UUID;
+
 public class Expense {
+    private String id;
     private long amount;
     private String category;
     private String date;
@@ -9,8 +12,8 @@ public class Expense {
     private String userId;
 
     public Expense() {
+        this.id = UUID.randomUUID().toString();
     }
-
     public Expense(long amount, String category, String date, String description, long timestamp, String userId) {
         this.amount = amount;
         this.category = category;
@@ -18,6 +21,15 @@ public class Expense {
         this.description = description;
         this.timestamp = timestamp;
         this.userId = userId;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public long getAmount() {

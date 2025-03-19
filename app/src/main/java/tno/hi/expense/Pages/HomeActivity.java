@@ -52,31 +52,30 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize Firebase Firestore
+
         db = FirebaseFirestore.getInstance();
 
-        // Get current user
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             userId = currentUser.getUid();
         }
 
-        // Initialize views
         totalExpenseView = findViewById(R.id.total_expense);
-        adapter = new ExpenseAdapter(expenseList);
+        adapter = new ExpenseAdapter(expenseList, this);
         RecyclerView recyclerView = findViewById(R.id.recent_expenses_list);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set up buttons
+
         Button addExpenseButton = findViewById(R.id.add_expense_button);
         addExpenseButton.setOnClickListener(v -> {
-            // Start AddExpenseActivity
+
             Intent intent = new Intent(HomeActivity.this, AddExpenseActivity.class);
             startActivity(intent);
         });
 
-        // Fetch expenses from Firestore
+
         fetchExpenses();
 
     }
@@ -90,7 +89,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void fetchExpenses() {
         if (userId == null) {
-            // Handle error: User not logged in
             return;
         }
 
@@ -99,13 +97,13 @@ public class HomeActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        expenseList.clear(); // Clear the list before adding new data
-                        totalExpenseThisMonth = 0; // Reset total expense
+                        expenseList.clear();
+                        totalExpenseThisMonth = 0;
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Expense expense = document.toObject(Expense.class);
                             expenseList.add(expense);
 
-                            // Check if the expense is in the current month
+
                             if (isExpenseInCurrentMonth(expense.getTimestamp())) {
                                 totalExpenseThisMonth += expense.getAmount();
                             }

@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import tno.hi.expense.R;
 
@@ -126,7 +127,9 @@ public class AddExpenseActivity extends AppCompatActivity {
         }
 
         // Create expense data
+        String id = UUID.randomUUID().toString();
         Map<String, Object> expense = new HashMap<>();
+        expense.put("id", id);
         expense.put("date", date);
         expense.put("category", category);
         expense.put("amount", amount);
@@ -136,7 +139,8 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         // Save to Firestore
         db.collection("expenses")
-                .add(expense)
+                .document(id)
+                .set(expense)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(this, "Đã thêm chi tiêu thành công", Toast.LENGTH_SHORT).show();
                     finish();
@@ -145,4 +149,5 @@ public class AddExpenseActivity extends AppCompatActivity {
                     Toast.makeText(this, "Lỗi khi thêm chi tiêu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 }
