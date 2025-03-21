@@ -7,6 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,6 +15,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import tno.hi.expense.Models.Expense;
 import tno.hi.expense.R;
 
 public class ExpenseDetailsActivity extends AppCompatActivity {
@@ -61,8 +66,50 @@ public class ExpenseDetailsActivity extends AppCompatActivity {
 
         // Set up buttons
         backButton.setOnClickListener(v -> finish());
-        deleteButton.setOnClickListener(v -> deleteExpense());
+        deleteButton.setOnClickListener(v -> showDeleteConfirmDialog());
         editButton.setOnClickListener(v -> editExpense());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadExpenseDetails();
+    }
+
+    private void loadExpenseDetails() {
+        db.collection("expenses").document(expenseId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Expense expense = documentSnapshot.toObject(Expense.class);
+                        if (expense != null) {
+                            dateDetail.setText(expense.getDate());
+                            categoryDetail.setText(expense.getCategory());
+
+                            NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                            String formattedAmount = format.format(expense.getAmount());
+                            amountDetail.setText(formattedAmount);
+
+                            descriptionDetail.setText(expense.getDescription());
+                        }
+                    } else {
+                        Toast.makeText(this, "Chi tiêu không tồn tại", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Lỗi khi tải chi tiêu: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void showDeleteConfirmDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Xác nhận")
+                .setMessage("Bạn có chắc chắn muốn xóa chi tiêu này không?")
+                .setPositiveButton("Có", (dialog, which) -> deleteExpense())
+                .setNegativeButton("Không", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     private void deleteExpense() {
